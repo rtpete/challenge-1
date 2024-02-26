@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import requests
 
+
 class DraggableShapeApp:
     def __init__(self, root):
         """
@@ -27,9 +28,11 @@ class DraggableShapeApp:
         # Initialize the dropdown menu for selecting the shape type
         self.shape_type_var = tk.StringVar()
         self.shape_type_var.set('Square')
-        self.shape_type_dropdown = ttk.Combobox(root, textvariable=self.shape_type_var,
-                                                values=['Square', 'Rectangle', 'Circle', 'Oval', 'Triangle'], state="readonly")
-        self.shape_type_dropdown.pack(pady=10)
+        self.shape_type_dropdown = ttk.Combobox(
+            root, textvariable=self.shape_type_var, values=['Square', 'Rectangle', 'Circle', 'Oval', 'Triangle'],
+            state="readonly"
+        )
+        self.shape_type_dropdown.pack(pady=5)
         self.shape_type_dropdown.bind("<<ComboboxSelected>>", self.reload_shape)
 
         # Load colors from API
@@ -39,7 +42,7 @@ class DraggableShapeApp:
         self.color_var = tk.StringVar()
         self.color_dropdown = ttk.Combobox(root, textvariable=self.color_var, values=self.colors, state="readonly")
         self.color_dropdown.set('Red to Green')
-        self.color_dropdown.pack(pady=10)
+        self.color_dropdown.pack(pady=5)
         self.color_dropdown.bind("<<ComboboxSelected>>", self.reload_shape)
 
         # Create the shape to display on the screen, default to Red Square to begin
@@ -49,8 +52,8 @@ class DraggableShapeApp:
         """
         Create and display the selected shape on the canvas
         """
-        # Remove the previous shape 
-        self.canvas.delete('shape') 
+        # Remove the previous shape
+        self.canvas.delete('shape')
         
         # Get the selected shape type and color sequence
         shape_type = self.shape_type_var.get()
@@ -68,7 +71,7 @@ class DraggableShapeApp:
             self.shape = self.canvas.create_oval(270, 280, 330, 320, fill=self.color, tags='shape')
         elif shape_type == 'Triangle':
             self.shape = self.canvas.create_polygon(280, 320, 320, 320, 300, 280, fill=self.color, tags='shape')
-        
+
         # Enable the shape to move on the canvas
         self.bind_shape_events()
 
@@ -85,10 +88,10 @@ class DraggableShapeApp:
         """
         self.start_x = event.x
         self.start_y = event.y
-    
+
     def on_shape_drag(self, event):
         """
-        Move the shape based on the existing coordinates and the event of being dragged 
+        Move the shape based on the existing coordinates and the event of being dragged
         and change shape color based on position
 
         Args:
@@ -131,7 +134,7 @@ class DraggableShapeApp:
         Returns:
             list: List of color sequences to populate the dropdown menu
         """
-        api_url = 'http://127.0.0.1:5000/colors'  
+        api_url = 'http://127.0.0.1:5000/colors'
         try:
             response = requests.get(api_url)
 
@@ -139,11 +142,14 @@ class DraggableShapeApp:
                 return response.json()
             else:
                 # Return colors if API call fails
-                return ['Red to Green', 'Green to Red', 'Blue to Orange', 'Orange to Blue', 'Purple to Yellow', 'Yellow to Purple']
+                return ['Red to Green', 'Green to Red', 'Blue to Orange', 
+                        'Orange to Blue', 'Purple to Yellow', 'Yellow to Purple']
         except requests.exceptions.RequestException as e:
             # Return colors if API call fails
             print(f"Error fetching colors from API: {e}")
-            return ['Red to Green', 'Green to Red', 'Blue to Orange', 'Orange to Blue', 'Purple to Yellow', 'Yellow to Purple']
+            return ['Red to Green', 'Green to Red', 'Blue to Orange', 
+                    'Orange to Blue', 'Purple to Yellow', 'Yellow to Purple']
+
 
 if __name__ == "__main__":
     root = tk.Tk()
